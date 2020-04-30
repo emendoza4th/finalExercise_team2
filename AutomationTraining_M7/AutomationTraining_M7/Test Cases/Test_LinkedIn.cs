@@ -26,7 +26,7 @@ namespace AutomationTraining_M7.Test_Cases
             LinkedIn_LoginPage.fnEnterUserName(ConfigurationManager.AppSettings.Get("username"));
             LinkedIn_LoginPage.fnEnterPassword(ConfigurationManager.AppSettings.Get("password"));
             LinkedIn_LoginPage.fnClickSignInButton();
-
+            
         }
     }
 }
