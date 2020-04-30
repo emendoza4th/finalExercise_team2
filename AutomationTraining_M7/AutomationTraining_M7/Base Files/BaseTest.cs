@@ -20,6 +20,7 @@ namespace AutomationTraining_M7.Base_Files
         public static clsDriver objclsDriver;
         public static IWebDriver driver;
         /*URL for Webdriver*/
+
         private static string strBrowserName = ConfigurationManager.AppSettings.Get("url");
         /*Extent Reports Framework*/
         public static clsReportManager objRM;
