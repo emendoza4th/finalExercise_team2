@@ -39,7 +39,7 @@ namespace AutomationTraining_M7.Test_Cases
                     userpath = Directory.GetParent(userpath).ToString();
                 }
 
-                string filepath = userpath + "\\Documents\\technologies.txt";
+                string filepath = userpath + "\\technologies\\technologies.txt";
                 //Check if the file exists, if not create it and write alert
                 if (File.Exists(filepath))
                 {
@@ -67,8 +67,8 @@ namespace AutomationTraining_M7.Test_Cases
                     return;
                 }
 
-                string[] arrLines = System.IO.File.ReadAllLines(filepath);
-                //string[] arrLanguages = { "English" };
+                string[] arrStrLines = System.IO.File.ReadAllLines(filepath);
+                //string[] arrStrLanguages = { "English" };
 
                 //Step# 1 .- Log In 
                 objSearch = new LinkedIn_SearchPage(driver);
@@ -98,13 +98,13 @@ namespace AutomationTraining_M7.Test_Cases
                 }
 
                 //Step# 3 .- Set Filters
-                for (int i = 0; i < arrLines.Length; i++)
+                for (int i = 0; i < arrStrLines.Length; i++)
                 {
                     objSearch = new LinkedIn_SearchPage(driver);
-                    LinkedIn_SearchPage.fnEnterSearchText(arrLines[i]);
+                    LinkedIn_SearchPage.fnEnterSearchText(arrStrLines[i]);
                     LinkedIn_SearchPage.fnClickSearchBtn();
                     objRM.fnAddStepLogWithSnapshot(objTest, driver, "Technology search.", "Search.png", "Pass");
-                    ExportDataCsv file = new ExportDataCsv(arrLines[i]);
+                    ExportDataCsv file = new ExportDataCsv(arrStrLines[i]);
                     wait = new WebDriverWait(driver, new TimeSpan(0, 1, 0));
                     Console.WriteLine("Aqui");
                     wait.Until(ExpectedConditions.UrlContains("search/results"));
@@ -122,7 +122,7 @@ namespace AutomationTraining_M7.Test_Cases
                     }
                     wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@class='search-vertical-filter__dropdown-trigger-text mr1'][text()='People' or text()='Gente']")));
                     wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[span[text()='All Filters' or text()='Todos los filtros']]")));
-                    objRM.fnAddStepLogWithSnapshot(objTest, driver, "People filtered", $"{arrLines[i]}_People_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
+                    objRM.fnAddStepLogWithSnapshot(objTest, driver, "People filtered", $"{arrStrLines[i]}_People_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
 
                     //Step# 5 .- Locations selection
                     LinkedIn_SearchPage.fnSelectAllFilters();
@@ -139,16 +139,16 @@ namespace AutomationTraining_M7.Test_Cases
                         wait.Until(ExpectedConditions.StalenessOf(LinkedIn_SearchPage.SelectMexico()));
                         LinkedIn_SearchPage.fnSelectMexico();
                     }
-                    objRM.fnAddStepLogWithSnapshot(objTest, driver, "Select Country", $"{arrLines[i]}_Location_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
+                    objRM.fnAddStepLogWithSnapshot(objTest, driver, "Select Country", $"{arrStrLines[i]}_Location_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
                     //wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@class='search-basic-typeahead search-vertical-typeahead ember-view']//*[@class='basic-typeahead__selectable ember-view']//span[text()= 'Mexico' or 'México']")));
 
                     //Step 6 .- Language selection.
                     LinkedIn_SearchPage.fnLanguageEng();
-                    objRM.fnAddStepLogWithSnapshot(objTest, driver, "Language selection", $"{arrLines[i]}_Language_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
+                    objRM.fnAddStepLogWithSnapshot(objTest, driver, "Language selection", $"{arrStrLines[i]}_Language_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
 
                     //Step# 7 .- Apply the Filters
                     LinkedIn_SearchPage.fnClickApplyBtn();
-                    objRM.fnAddStepLogWithSnapshot(objTest, driver, "Filters Applied", $"{arrLines[i]}_Filters_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
+                    objRM.fnAddStepLogWithSnapshot(objTest, driver, "Filters Applied", $"{arrStrLines[i]}_Filters_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
                     wait.Until(ExpectedConditions.StalenessOf(driver.FindElement(By.XPath("(//span[@class='name actor-name'])[1]"))));
 
                     IList <IWebElement> allSearchResults = LinkedIn_SearchPage.fnAllResultPage();
@@ -167,8 +167,8 @@ namespace AutomationTraining_M7.Test_Cases
                     //    wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[text()='Información de contacto']")));
                     //    LinkedIn_SearchPage.fnScrollDownToSkills();
                     //    file.Member.Add(LinkedIn_SearchPage.fnMemberInfo());
-                    //    if (arrLines[i].Contains("#")) { arrLines[i] = "CSharp"; }
-                    //    objRM.fnAddStepLogWithSnapshot(objTest, driver, "Data from Contact stored", $"{arrLines[i]}_Data_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
+                    //    if (arrStrLines[i].Contains("#")) { arrStrLines[i] = "CSharp"; }
+                    //    objRM.fnAddStepLogWithSnapshot(objTest, driver, "Data from Contact stored", $"{arrStrLines[i]}_Data_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
                     //    driver.Navigate().Back();
 
                     //}
@@ -229,8 +229,8 @@ namespace AutomationTraining_M7.Test_Cases
                         }
                         wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[text()='Información de contacto' or text()='Contact info']")));
                         LinkedIn_SearchPage.fnScrollDownToSkills();
-                        if (arrLines[i].Contains("#")) { arrLines[i] = "CSharp"; }
-                        objRM.fnAddStepLogWithSnapshot(objTest, driver, "Data from Contact stored", $"{arrLines[i]}_Data_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
+                        if (arrStrLines[i].Contains("#")) { arrStrLines[i] = "CSharp"; }
+                        objRM.fnAddStepLogWithSnapshot(objTest, driver, "Data from Contact stored", $"{arrStrLines[i]}_Data_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
                         file.Member.Add(LinkedIn_SearchPage.fnMemberInfo());
                         driver.Navigate().Back();
 
