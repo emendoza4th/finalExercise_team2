@@ -31,7 +31,6 @@ namespace AutomationTraining_M7.Page_Objects
         readonly static string STR_ADDCOUNTTRY_TEXT = "//input[@placeholder='Add a country/region' or @placeholder='Añadir un país o región'][@aria-label='Add a country/region' or @aria-label='Añadir un país o región']";
         readonly static string STR_SELECT_MEXICO_DD = "//*[@class='search-basic-typeahead search-vertical-typeahead ember-view']//*[@class='basic-typeahead__selectable ember-view']//span[text()= 'Mexico' or text()='México']";
         readonly static string STR_CLEAR_FILTERS = "//div[@id='inbug-nav-item']";
-        //readonly static string STR_TOTAL_RESULTS_WO = "/html/body/div[5]/div[5]/div[4]/div/div[2]/div/div[2]/div/div/div/div/ul";
         readonly static string STR_TOTAL_RESULTS_WO = "//ul[@class='search-results__list list-style-none ']/li/div/div[1]/div[2]/a/h3/span/span/span[1]";
         readonly static string STR_NAME = "//li[@class='inline t-24 t-black t-normal break-words']";
         readonly static string STR_ROLE = "//h2[contains(@class,'mt1 t-18 t-black t-normal break-words') or contains(@class,'mt1 t-18 t-black t-normal')]";
@@ -67,7 +66,6 @@ namespace AutomationTraining_M7.Page_Objects
         private static IWebElement objShowMore => _ObjSrcDriver.FindElement(By.XPath(STR_SHOW_MORE_BTN));
         private static IList<IWebElement> objName => _ObjSrcDriver.FindElements(By.XPath(STR_NAME));
         private static IList<IWebElement> objRole => _ObjSrcDriver.FindElements(By.XPath(STR_ROLE));
-
         private static IList<IWebElement> objLastJob => _ObjSrcDriver.FindElements(By.XPath(STR_LAST_JOB));
         private static IList<IWebElement> objExp => _ObjSrcDriver.FindElements(By.XPath(STR_EXPERIENCE));
         private static IList<IWebElement> objSkills => _ObjSrcDriver.FindElements(By.XPath(STR_SKILLS));
@@ -75,9 +73,7 @@ namespace AutomationTraining_M7.Page_Objects
         private static IWebElement objLProfileBtn => _ObjSrcDriver.FindElement(By.XPath(STR_LAST_PROFILE));
         private static IWebElement objPopUpBackBtn => _ObjSrcDriver.FindElement(By.XPath(STR_POPUP_BACK_BTN));
         /*METHODS*/
-
-
-
+        
         //Get Member Info
         public static IList<IWebElement> GetLastJob()
         {
@@ -92,8 +88,6 @@ namespace AutomationTraining_M7.Page_Objects
         public static void fnScrollDownToSkills()
         {
             IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-            //js.ExecuteScript("window.scrollTo(50, document.body.scrollHeight/3)");
-            
             js.ExecuteScript("window.scrollBy(0,50)");
         }
 
@@ -102,15 +96,7 @@ namespace AutomationTraining_M7.Page_Objects
             IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
             js.ExecuteScript("window.scrollBy(0,50)");
         }
-
-        //public static void fnScrollElement(By by) 
-        //{
-        //    do {
-        //        fnScrollDownToSkills(
-        //    }
-        //    while (fnElemetExit(By by));
-        //}
-
+        
         //EDSP
         public static void fnScrollUp()
         {
@@ -123,7 +109,7 @@ namespace AutomationTraining_M7.Page_Objects
         {
             List<string> objURL = new List<string>();
             Candidates InfoCandidate = new Candidates();
-            //objTest = objExtent.CreateTest(TestContext.CurrentContext.Test.Name);
+            objTest = objExtent.CreateTest(TestContext.CurrentContext.Test.Name);
 
             for (int i = 0; i < objName.Count; i++)
             {
@@ -301,10 +287,7 @@ namespace AutomationTraining_M7.Page_Objects
         {
             return objLangEngCb;
         }
-        /*private IWebElement GetAllResultsPage()
-        {
-            return objAllResultsPage;
-        }*/
+        
 
         public static void fnLanguageEng()
         {
@@ -337,7 +320,7 @@ namespace AutomationTraining_M7.Page_Objects
         public static void fnClickApplyBtn()
         {
             objApplyBtn.Click();
-            //wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_TOTAL_RESULTS_WO)));
+            
         }
 
 
@@ -382,25 +365,6 @@ namespace AutomationTraining_M7.Page_Objects
         }
         public static IList<IWebElement> fnAllResultPage()
         {
-            /*bool flag;
-            do
-            {
-                fnScrollDownToSkills();
-                try
-                {
-                    GetElement(By.XPath(STR_LAST_PROFILE));
-                    flag = true;
-                    break;
-                }
-                catch (NoSuchElementException)
-                {
-                    flag = false;
-                    continue;
-                }
-            }
-            while (!flag);*/
-
-            
             IList<IWebElement> objAllSearchResults = _ObjSrcDriver.FindElements(By.XPath(STR_TOTAL_RESULTS_WO));
             return objAllSearchResults;
         }

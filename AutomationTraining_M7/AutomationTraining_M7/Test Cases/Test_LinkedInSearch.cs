@@ -143,12 +143,12 @@ namespace AutomationTraining_M7.Test_Cases
                     }
                     catch (StaleElementReferenceException)
                     {
-                        //wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//*[@class='search-basic-typeahead search-vertical-typeahead ember-view']//*[@class='basic-typeahead__selectable ember-view']//span[text()= 'Mexico' or 'México']")));
+                        
                         wait.Until(ExpectedConditions.StalenessOf(LinkedIn_SearchPage.SelectMexico()));
                         LinkedIn_SearchPage.fnSelectMexico();
                     }
                     objRM.fnAddStepLogWithSnapshot(objTest, driver, "Select Country", $"{arrLines[i]}_Location_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
-                    //wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@class='search-basic-typeahead search-vertical-typeahead ember-view']//*[@class='basic-typeahead__selectable ember-view']//span[text()= 'Mexico' or 'México']")));
+                    
 
                     //Step 6 .- Language selection.
                     LinkedIn_SearchPage.fnLanguageEng();
@@ -157,7 +157,6 @@ namespace AutomationTraining_M7.Test_Cases
                     //Step# 7 .- Apply the Filters
                     LinkedIn_SearchPage.fnClickApplyBtn();
                     objRM.fnAddStepLogWithSnapshot(objTest, driver, "Filters Applied", $"{arrLines[i]}_Filters_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
-                    //wait.Until(ExpectedConditions.(driver.FindElement(By.XPath("(//span[@class='name actor-name'])[1]"))));
                     Thread.Sleep(5000);
                     
 
@@ -171,24 +170,19 @@ namespace AutomationTraining_M7.Test_Cases
                     {
                         wait.Until(ExpectedConditions.ElementIsVisible (By.XPath($"(//span[@class='actor-name' or @class='name actor-name'])[{b + 1}]")));
                         wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath($"(//span[@class='actor-name' or @class='name actor-name'])[{b + 1}]")));
-                        //string listXpath = $"//span[@class='actor-name'][{b+2}]";
                         string listXpath = $"(//span[@class='actor-name' or @class='name actor-name'])[{b + 1}]";
                         string STR_TOTAL_RESULTS_WO = listXpath;
                         wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(STR_TOTAL_RESULTS_WO)));
                         IWebElement objSearchResult = driver.FindElement(By.XPath(listXpath));
-
-                        
                         
                         objSearchResult.Click();
                         Thread.Sleep(3000);
                         
                         LinkedIn_SearchPage.fnScrollDownResults();
-                        //string Volver = driver.FindElements(By.XPath("//span[text()='Volver']")).ToString();
-                        IList<IWebElement> Volver = driver.FindElements(By.XPath("//span[text()='Volver']"));
-
-                        Console.WriteLine("Verify:" + Volver.Count());
-
-                        if (Volver.Count() > 0)
+                        
+                        IList<IWebElement> PopUpBtn = driver.FindElements(By.XPath("//span[text()='Volver']"));
+                        
+                        if (PopUpBtn.Count() > 0)
                             {
                                 LinkedIn_SearchPage.fnClickPopUpBtn();
                             }
@@ -205,10 +199,7 @@ namespace AutomationTraining_M7.Test_Cases
  
 
                     }
-
                     
-                    //    file.Member = LinkedIn_SearchPage.fnMemberInfo();
-
                     file.fnCreateFile(file.Member);
 
                     LinkedIn_SearchPage.fnClearFilters();
