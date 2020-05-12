@@ -29,18 +29,20 @@ namespace AutomationTraining_M7.Page_Objects
         readonly static string STR_LANG_ESP_CB = "//label[text()='Spanish' or text()='Español']";
         readonly static string STR_REGIONMX_CB = "//label[text()='Mexico' or text()='México']";
         readonly static string STR_ADDCOUNTTRY_TEXT = "//input[@placeholder='Add a country/region' or @placeholder='Añadir un país o región'][@aria-label='Add a country/region' or @aria-label='Añadir un país o región']";
-        readonly static string STR_SELECT_MEXICO_DD = "//*[@class='search-basic-typeahead search-vertical-typeahead ember-view']//*[@class='basic-typeahead__selectable ember-view']//span[text()= 'Mexico' or text()='México']";        
+        readonly static string STR_SELECT_MEXICO_DD = "//*[@class='search-basic-typeahead search-vertical-typeahead ember-view']//*[@class='basic-typeahead__selectable ember-view']//span[text()= 'Mexico' or text()='México']";
         readonly static string STR_CLEAR_FILTERS = "//div[@id='inbug-nav-item']";
         //readonly static string STR_TOTAL_RESULTS_WO = "/html/body/div[5]/div[5]/div[4]/div/div[2]/div/div[2]/div/div/div/div/ul";
         readonly static string STR_TOTAL_RESULTS_WO = "//ul[@class='search-results__list list-style-none ']/li/div/div[1]/div[2]/a/h3/span/span/span[1]";
         readonly static string STR_NAME = "//li[@class='inline t-24 t-black t-normal break-words']";
-        readonly static string STR_ROLE = "//h2[@class='mt1 t-18 t-black t-normal']";
+        readonly static string STR_ROLE = "//h2[contains(@class,'mt1 t-18 t-black t-normal break-words') or contains(@class,'mt1 t-18 t-black t-normal')]";
+                                           
         readonly static string STR_LAST_JOB = "(//div[contains(@class,'pv-entity__summary-info pv-entity__summary-info--background-section')])[1]";
         readonly static string STR_EXPERIENCE = "//section[@id='experience-section']";
         readonly static string STR_SHOW_MORE_BTN = "//button[@data-control-name='skill_details']";
         readonly static string STR_SKILLS = "//ol[@class='pv-skill-categories-section__top-skills pv-profile-section__section-info section-info pb1']";
         readonly static string STR_TOOLS = "//div[@class='pv-skill-category-list pv-profile-section__section-info mb6 ember-view']/h3[text()='Herramientas y tecnologías']/following-sibling::ol";
         readonly static string STR_LAST_PROFILE = "(//span[@class='name actor-name'])[10]";
+        readonly static string STR_POPUP_BACK_BTN = "//span[text()='Volver']";
 
         //test
         /*CONSTRUCTOR*/
@@ -71,6 +73,7 @@ namespace AutomationTraining_M7.Page_Objects
         private static IList<IWebElement> objSkills => _ObjSrcDriver.FindElements(By.XPath(STR_SKILLS));
         private static IList<IWebElement> objTools => _ObjSrcDriver.FindElements(By.XPath(STR_TOOLS));
         private static IWebElement objLProfileBtn => _ObjSrcDriver.FindElement(By.XPath(STR_LAST_PROFILE));
+        private static IWebElement objPopUpBackBtn => _ObjSrcDriver.FindElement(By.XPath(STR_POPUP_BACK_BTN));
         /*METHODS*/
 
 
@@ -90,6 +93,13 @@ namespace AutomationTraining_M7.Page_Objects
         {
             IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
             //js.ExecuteScript("window.scrollTo(50, document.body.scrollHeight/3)");
+            
+            js.ExecuteScript("window.scrollBy(0,50)");
+        }
+
+        public static void fnScrollDownResults()
+        {
+            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
             js.ExecuteScript("window.scrollBy(0,50)");
         }
 
@@ -122,14 +132,14 @@ namespace AutomationTraining_M7.Page_Objects
                 wait = new WebDriverWait(driver, new TimeSpan(0, 1, 0));
                 Actions actions = new Actions(_ObjSrcDriver);
                 Console.WriteLine("Name: " + objName[i].Text);
-                
+
                 Console.WriteLine();
                 Console.WriteLine("Role: " + objRole[i].Text);
-                
+
                 Console.WriteLine();
                 objURL.Add(_ObjSrcDriver.Url);
                 Console.WriteLine("URL: " + objURL[i]);
-                
+
                 Console.WriteLine();
                 do
                 {
@@ -138,22 +148,22 @@ namespace AutomationTraining_M7.Page_Objects
                 }
                 while (objLastJob.Count == 0);
                 wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_LAST_JOB)));
-                try 
-                { 
-                    Console.WriteLine("Last Job: " + objLastJob[i].Text); 
+                try
+                {
+                    Console.WriteLine("Last Job: " + objLastJob[i].Text);
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     continue;
                 }
                 Console.WriteLine();
-                
+
                 wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_EXPERIENCE)));
-                try 
-                { 
-                    Console.WriteLine("Experience: " + objExp[i].Text); 
+                try
+                {
+                    Console.WriteLine("Experience: " + objExp[i].Text);
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     continue;
                 }
@@ -171,7 +181,7 @@ namespace AutomationTraining_M7.Page_Objects
                         objShowMore.Click();
                         break;
                     }
-                    catch(Exception)
+                    catch (Exception)
                     {
                         continue;
                     }
@@ -179,29 +189,30 @@ namespace AutomationTraining_M7.Page_Objects
                 while (actual < height);
                 wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(STR_SHOW_MORE_BTN)));
                 wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_SKILLS)));
-                try 
-                { 
-                    Console.WriteLine("Skills and Validations: " + objSkills[i].Text); 
+                try
+                {
+                    Console.WriteLine("Skills and Validations: " + objSkills[i].Text);
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     continue;
                 }
                 Console.WriteLine();
+
                 
-                wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_TOOLS)));
-                try 
-                { 
-                    Console.WriteLine("Tools and Technologies: " + objTools[i].Text); 
+                try
+                {
+                    wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_TOOLS)));
+                    Console.WriteLine("Tools and Technologies: " + objTools[i].Text);
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     continue;
                 }
-                
+
                 Console.WriteLine("____________________________________________________");
 
-                //Export ifno to CSV file
+                //Export info to CSV file
                 //CODE TO  GET CANDIDATE DATA
                 InfoCandidate = new Candidates
                 {
@@ -209,7 +220,7 @@ namespace AutomationTraining_M7.Page_Objects
                     ProfileRole = objRole[i].Text,
                     LinkedInUrl = objURL[i],
                     LastJob = objLastJob[i].Text,
-                    Experience = objExp[i].Text,                   
+                    Experience = objExp[i].Text,
                     SkillsValidations = objSkills[i].Text,
                     ToolsTechnologies = objTools[i].Text
                 };
@@ -290,10 +301,10 @@ namespace AutomationTraining_M7.Page_Objects
         {
             return objLangEngCb;
         }
-        //private IWebElement GetAllResultsPage()
-        //{
-        //    return objAllResultsPage;
-        //}
+        /*private IWebElement GetAllResultsPage()
+        {
+            return objAllResultsPage;
+        }*/
 
         public static void fnLanguageEng()
         {
@@ -364,9 +375,14 @@ namespace AutomationTraining_M7.Page_Objects
         {
             objClearFilters.Click();
         }
+
+        public static void fnClickPopUpBtn()
+        {
+            objPopUpBackBtn.Click();
+        }
         public static IList<IWebElement> fnAllResultPage()
         {
-            bool flag;
+            /*bool flag;
             do
             {
                 fnScrollDownToSkills();
@@ -382,11 +398,14 @@ namespace AutomationTraining_M7.Page_Objects
                     continue;
                 }
             }
-            while (!flag);
+            while (!flag);*/
 
+            
             IList<IWebElement> objAllSearchResults = _ObjSrcDriver.FindElements(By.XPath(STR_TOTAL_RESULTS_WO));
             return objAllSearchResults;
         }
+
+        
 
         public static IWebElement GetElement(By by)
         {
@@ -394,7 +413,7 @@ namespace AutomationTraining_M7.Page_Objects
         }
         public void fnAllResultPage(IWebElement elementToSearch)
         {
-            elementToSearch.Click();            
+            elementToSearch.Click();
         }
     }
 }
