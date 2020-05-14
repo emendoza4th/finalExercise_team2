@@ -176,27 +176,38 @@ namespace AutomationTraining_M7.Test_Cases
                         IWebElement objSearchResult = driver.FindElement(By.XPath(listXpath));
                         
                         objSearchResult.Click();
-                        Thread.Sleep(3000);
-                        
-                        LinkedIn_SearchPage.fnScrollDownResults();
+                        //Thread.Sleep(3000);
                         
                         IList<IWebElement> PopUpBtn = driver.FindElements(By.XPath("//span[text()='Volver']"));
                         
+
                         if (PopUpBtn.Count() > 0)
                             {
                                 LinkedIn_SearchPage.fnClickPopUpBtn();
                             }
-                        else
+                        else 
+                        {
+
+                            wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[text()='Información de contacto']")));
+                            IList<IWebElement> ConnectBtn = driver.FindElements(By.XPath("//span[text()='Conectar' or text()='Connect']/.."));
+                            if (ConnectBtn.Count() > 0)
                             {
-                                wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[text()='Información de contacto']")));
+                                
                                 LinkedIn_SearchPage.fnScrollDownToSkills();
                                 file.Member.Add(LinkedIn_SearchPage.fnMemberInfo());
-                                if (arrLines[i].Contains("#")) { arrLines[i] = "CSharp"; }
+                                //if (arrLines[i].Contains("#")) { arrLines[i] = "CSharp"; }
                                 objRM.fnAddStepLogWithSnapshot(objTest, driver, "Data from Contact stored", $"{arrLines[i]}_Data_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
                                 driver.Navigate().Back();
                             }
-                        
- 
+                            else
+                            {
+                                driver.Navigate().Back();
+                            }
+                        }
+                            
+
+                        LinkedIn_SearchPage.fnScrollDownResults();
+
 
                     }
                     

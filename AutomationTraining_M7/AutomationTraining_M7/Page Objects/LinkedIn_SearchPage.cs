@@ -199,6 +199,7 @@ namespace AutomationTraining_M7.Page_Objects
                 Console.WriteLine("____________________________________________________");
 
                 //Export info to CSV file
+
                 //CODE TO  GET CANDIDATE DATA
                 InfoCandidate = new Candidates
                 {
