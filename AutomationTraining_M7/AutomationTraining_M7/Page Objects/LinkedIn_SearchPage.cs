@@ -109,6 +109,7 @@ namespace AutomationTraining_M7.Page_Objects
         {
             List<string> objURL = new List<string>();
             Candidates InfoCandidate = new Candidates();
+            //Candidates_File candidates = new Candidates_File();
             objTest = objExtent.CreateTest(TestContext.CurrentContext.Test.Name);
 
             for (int i = 0; i < objName.Count; i++)
@@ -117,13 +118,16 @@ namespace AutomationTraining_M7.Page_Objects
                 int actual = 0;
                 wait = new WebDriverWait(driver, new TimeSpan(0, 1, 0));
                 Actions actions = new Actions(_ObjSrcDriver);
+                InfoCandidate.ActorName = objName[i].Text;
                 Console.WriteLine("Name: " + objName[i].Text);
 
                 Console.WriteLine();
+                InfoCandidate.ProfileRole = objRole[i].Text;
                 Console.WriteLine("Role: " + objRole[i].Text);
 
                 Console.WriteLine();
                 objURL.Add(_ObjSrcDriver.Url);
+                InfoCandidate.LinkedInUrl = objURL[i];
                 Console.WriteLine("URL: " + objURL[i]);
 
                 Console.WriteLine();
@@ -136,6 +140,7 @@ namespace AutomationTraining_M7.Page_Objects
                 wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_LAST_JOB)));
                 try
                 {
+                    InfoCandidate.LastJob = objLastJob[i].Text;
                     Console.WriteLine("Last Job: " + objLastJob[i].Text);
                 }
                 catch (Exception)
@@ -147,6 +152,7 @@ namespace AutomationTraining_M7.Page_Objects
                 wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_EXPERIENCE)));
                 try
                 {
+                    InfoCandidate.Experience = objExp[i].Text;
                     Console.WriteLine("Experience: " + objExp[i].Text);
                 }
                 catch (Exception)
@@ -177,6 +183,7 @@ namespace AutomationTraining_M7.Page_Objects
                 wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_SKILLS)));
                 try
                 {
+                    InfoCandidate.SkillsValidations = objSkills[i].Text;
                     Console.WriteLine("Skills and Validations: " + objSkills[i].Text);
                 }
                 catch (Exception)
@@ -189,6 +196,7 @@ namespace AutomationTraining_M7.Page_Objects
                 try
                 {
                     wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_TOOLS)));
+                    InfoCandidate.ToolsTechnologies = objTools[i].Text;
                     Console.WriteLine("Tools and Technologies: " + objTools[i].Text);
                 }
                 catch (Exception)
@@ -200,16 +208,16 @@ namespace AutomationTraining_M7.Page_Objects
 
                 //Export info to CSV file
                 //CODE TO  GET CANDIDATE DATA
-                InfoCandidate = new Candidates
-                {
-                    ActorName = objName[i].Text,
-                    ProfileRole = objRole[i].Text,
-                    LinkedInUrl = objURL[i],
-                    LastJob = objLastJob[i].Text,
-                    Experience = objExp[i].Text,
-                    SkillsValidations = objSkills[i].Text,
-                    ToolsTechnologies = objTools[i].Text
-                };
+                //InfoCandidate = new Candidates
+                //{
+                //    ActorName = objName[i].Text,
+                //    ProfileRole = objRole[i].Text,
+                //    LinkedInUrl = objURL[i],
+                //    LastJob = objLastJob[i].Text,
+                //    Experience = objExp[i].Text,
+                //    SkillsValidations = objSkills[i].Text,
+                //    ToolsTechnologies = objTools[i].Text
+                //};
             }
             return InfoCandidate;
         }

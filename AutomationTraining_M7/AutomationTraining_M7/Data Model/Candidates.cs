@@ -18,4 +18,12 @@ namespace AutomationTraining_M7.Data_Model
 
 
     }
+
+    //public class Candidates_File
+    //{
+    //    public string FileName { get; set; }
+    //    public string Header { get; set; }
+    //    public List<Candidates> Member { get; set; }
+    //}
+    
 }

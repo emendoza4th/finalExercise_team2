@@ -97,6 +97,7 @@ namespace AutomationTraining_M7.Base_Files
                 Stream excelStream = File.Create(Path.GetFullPath(fnGetCSVPath() + FileName));
                 workbook.SaveAs(excelStream);
                 excelStream.Dispose();
+                excelStream.Close();
             }
         }
     }
