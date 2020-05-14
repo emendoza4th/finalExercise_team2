@@ -208,6 +208,8 @@ namespace AutomationTraining_M7.Page_Objects
 
                 //Export info to CSV file
                 //CODE TO  GET CANDIDATE DATA
+
+                //Can this be used all together?
                 //InfoCandidate = new Candidates
                 //{
                 //    ActorName = objName[i].Text,
