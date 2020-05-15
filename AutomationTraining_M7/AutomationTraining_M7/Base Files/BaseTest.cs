@@ -27,7 +27,6 @@ namespace AutomationTraining_M7.Base_Files
         public static ExtentV3HtmlReporter objHtmlReporter; //Add information in HTML
         public static ExtentReports objExtent; //Extent Reports Object
         public static ExtentTest objTest; // Test object for Extent Reports
-        //public static ExtentHtmlReporter objHtmlReporter; //Old Version of HTML
 
         [OneTimeSetUp]
         public static void fnBeforeClass()
@@ -37,7 +36,6 @@ namespace AutomationTraining_M7.Base_Files
             if (objHtmlReporter == null)
             {
                 objHtmlReporter = new ExtentV3HtmlReporter (objRM.fnReportPath());
-                //objHtmlReporter = new ExtentHtmlReporter(objRM.fnReportPath());
             }
             /*Init ExtentReports object*/
             if (objExtent == null)
@@ -54,8 +52,8 @@ namespace AutomationTraining_M7.Base_Files
             objExtent.Flush();
         }
 
-        [SetUp]
         //SetUp Before each test case
+        [SetUp]
         public static void SetUp()
         {
             driver = new ChromeDriver();
@@ -70,8 +68,8 @@ namespace AutomationTraining_M7.Base_Files
         public static void AfterTest()
         {
             objRM.fnTestCaseResult(objTest, objExtent, driver);
-            //driver.Close();
-            //driver.Quit();
+            driver.Close();
+            driver.Quit();
         }
 
         /*Clear and Send text to specific field*/

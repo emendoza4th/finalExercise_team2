@@ -20,7 +20,6 @@ namespace AutomationTraining_M7.Base_Files
         public ExportDataCsv(string pstrTechnologies)
         {
             FileName = $"{pstrTechnologies}_{DateTime.Now.ToString("MMddyyyy_HHmmss")}.xlsx";
-           // Header = "Actor Name|Profile/Role|LinkedIn URL|Last Job|Experience|Skills and Validations|Tools and technologies";
             Member = new List<Candidates>();
         }
         
@@ -55,7 +54,7 @@ namespace AutomationTraining_M7.Base_Files
 
                 sheet["E1"].Text = "Experience";
                 sheet["E1"].CellStyle.Font.Bold = true;
-                sheet["E1}"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
+                sheet["E1"].CellStyle.VerticalAlignment = ExcelVAlign.VAlignCenter;
 
                 sheet["F1"].Text = "Skill Validations";
                 sheet["F1"].CellStyle.Font.Bold = true;

@@ -15,7 +15,5 @@ namespace AutomationTraining_M7.Data_Model
         public string Experience { get; set; }
         public string SkillsValidations { get; set; }
         public string ToolsTechnologies { get; set; }
-
-
     }
 }
