@@ -14,14 +14,16 @@ using AutomationTraining_M7.Base_Files;
 using AutomationTraining_M7.Data_Model;
 using System.IO;
 
+
 namespace AutomationTraining_M7.Test_Cases
 {
     class Test_LinkedInSearch : Test_LinkedIn
     {
-        //LinkedIn_LoginPage objLogin; -- DELETE
+       
         public WebDriverWait wait;
         LinkedIn_SearchPage objSearch;
-
+        
+        
         [Test]
         
         public void Search_LinkedIn()
@@ -40,10 +42,12 @@ namespace AutomationTraining_M7.Test_Cases
                 }
 
                 string filepath = userpath + "\\Documents\\technologies.txt";
+                string[] arrLines = System.IO.File.ReadAllLines(filepath);
                 //Check if the file exists, if not create it and write alert
                 if (File.Exists(filepath))
                 {
-                    Console.WriteLine($"File was found, the content is:\n{filepath}");
+                    Console.WriteLine($"File was found in {filepath} the content is:\n");
+
                     String fileContent = System.IO.File.ReadAllText(filepath);
                     if (fileContent.Equals("Replace this text with the list of technologies you want to search candidates for."))
                     {
@@ -52,7 +56,10 @@ namespace AutomationTraining_M7.Test_Cases
                     }
                     else
                     {
-                        Console.WriteLine($"File is valid.");
+                        foreach (string line in arrLines)
+                        {
+                            Console.WriteLine("\t" + line);
+                        }
                     }
                 }
                 else
@@ -62,14 +69,11 @@ namespace AutomationTraining_M7.Test_Cases
                         byte[] file = new UTF8Encoding(true).GetBytes("Replace this text with the list of technologies you want to search candidates for.");
                         fs.Write(file, 0, file.Length);
                     }
-                    Console.WriteLine($"The input file for tech nologies was not found, please go to {filepath} and update the file contents.");
+                    Console.WriteLine($"The input file for technologies was not found, please go to {filepath} and update the file contents.");
 
                     return;
                 }
-
-                string[] arrLines = System.IO.File.ReadAllLines(filepath);
-                //string[] arrLanguages = { "English" };
-
+                
                 //Step# 1 .- Log In 
                 objSearch = new LinkedIn_SearchPage(driver);
                 Login_LinkedIn();
@@ -106,7 +110,7 @@ namespace AutomationTraining_M7.Test_Cases
                     objRM.fnAddStepLogWithSnapshot(objTest, driver, "Technology search.", "Search.png", "Pass");
                     ExportDataCsv file = new ExportDataCsv(arrLines[i]);
                     wait = new WebDriverWait(driver, new TimeSpan(0, 1, 0));
-                    Console.WriteLine("Aqui");
+                   
                     wait.Until(ExpectedConditions.UrlContains("search/results"));
                     wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[span[text()='People' or text()='Gente']]")));
 
@@ -117,7 +121,6 @@ namespace AutomationTraining_M7.Test_Cases
                     }
                     catch (StaleElementReferenceException)
                     {
-                        //wait.Until(ExpectedConditions.StalenessOf(LinkedIn_SearchPage.GetPeopleCB()));
                         LinkedIn_SearchPage.fnSelectPeople();
                     }
                     wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@class='search-vertical-filter__dropdown-trigger-text mr1'][text()='People' or text()='Gente']")));
@@ -135,109 +138,69 @@ namespace AutomationTraining_M7.Test_Cases
                     }
                     catch (StaleElementReferenceException)
                     {
-                        //wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//*[@class='search-basic-typeahead search-vertical-typeahead ember-view']//*[@class='basic-typeahead__selectable ember-view']//span[text()= 'Mexico' or 'México']")));
+                        
                         wait.Until(ExpectedConditions.StalenessOf(LinkedIn_SearchPage.SelectMexico()));
                         LinkedIn_SearchPage.fnSelectMexico();
                     }
                     objRM.fnAddStepLogWithSnapshot(objTest, driver, "Select Country", $"{arrLines[i]}_Location_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
-                    //wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@class='search-basic-typeahead search-vertical-typeahead ember-view']//*[@class='basic-typeahead__selectable ember-view']//span[text()= 'Mexico' or 'México']")));
-
+                    
                     //Step 6 .- Language selection.
                     LinkedIn_SearchPage.fnLanguageEng();
                     objRM.fnAddStepLogWithSnapshot(objTest, driver, "Language selection", $"{arrLines[i]}_Language_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
 
-                    //Step# 7 .- Apply the Filters
+                    //Step 7 .- Apply the Filters
                     LinkedIn_SearchPage.fnClickApplyBtn();
                     objRM.fnAddStepLogWithSnapshot(objTest, driver, "Filters Applied", $"{arrLines[i]}_Filters_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
-                    wait.Until(ExpectedConditions.StalenessOf(driver.FindElement(By.XPath("(//span[@class='name actor-name'])[1]"))));
-
-                    IList <IWebElement> allSearchResults = LinkedIn_SearchPage.fnAllResultPage();
-
+                    Thread.Sleep(5000);
+                    
+                    IList<IWebElement> allSearchResults = LinkedIn_SearchPage.fnAllResultPage();
+                    
                     //Step 8 .- Get the People information
-                    //for (int b = 0; b < allSearchResults.Count; b++)
-                    //{
-                    //    wait.Until(ExpectedConditions.ElementIsVisible (By.XPath($"(//span[@class='actor-name' or @class='name actor-name'])[{b + 1}]")));
-                    //    wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath($"(//span[@class='actor-name' or @class='name actor-name'])[{b + 1}]")));
-                    //    //string listXpath = $"//span[@class='actor-name'][{b+2}]";
-                    //    string listXpath = $"(//span[@class='actor-name' or @class='name actor-name'])[{b + 1}]";
-                    //    string STR_TOTAL_RESULTS_WO = listXpath;
-                    //    //wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(STR_TOTAL_RESULTS_WO)));
-                    //    IWebElement objSearchResult = driver.FindElement(By.XPath(listXpath));
-                    //    objSearchResult.Click();
-                    //    wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[text()='Información de contacto']")));
-                    //    LinkedIn_SearchPage.fnScrollDownToSkills();
-                    //    file.Member.Add(LinkedIn_SearchPage.fnMemberInfo());
-                    //    if (arrLines[i].Contains("#")) { arrLines[i] = "CSharp"; }
-                    //    objRM.fnAddStepLogWithSnapshot(objTest, driver, "Data from Contact stored", $"{arrLines[i]}_Data_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
-                    //    driver.Navigate().Back();
-
-                    //}
-
                     for (int b = 0; b < allSearchResults.Count; b++)
                     {
-
-
-                        wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath($"(//span[@class='actor-name' or @class='name actor-name'])[1]")));
-                        bool flag;
-                        do
-                        {
-                            LinkedIn_SearchPage.fnScrollDownToSkills();
-                            try
-                            {
-                                LinkedIn_SearchPage.GetElement(By.XPath($"(//span[@class='actor-name' or @class='name actor-name'])[{b + 1}]"));
-                                flag = true;
-                                break;
-                            }
-                            catch (NoSuchElementException)
-                            {
-                                flag = false;
-                                continue;
-                            }
-                        }
-                        while (!flag);
-
-                        //string listXpath = $"//span[@class='actor-name'][{b+2}]";
+                        wait.Until(ExpectedConditions.ElementIsVisible (By.XPath($"(//span[@class='actor-name' or @class='name actor-name'])[{b + 1}]")));
+                        wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath($"(//span[@class='actor-name' or @class='name actor-name'])[{b + 1}]")));
                         string listXpath = $"(//span[@class='actor-name' or @class='name actor-name'])[{b + 1}]";
-
-                        Console.WriteLine("XPATH is: " + listXpath);
                         string STR_TOTAL_RESULTS_WO = listXpath;
-                        //wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(STR_TOTAL_RESULTS_WO)));
+                        wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(STR_TOTAL_RESULTS_WO)));
                         IWebElement objSearchResult = driver.FindElement(By.XPath(listXpath));
-
-                        try
-                        {
-                            objSearchResult.Click();
-                        }
-                        catch (ElementClickInterceptedException)
-                        {
-                            bool displayedFlag;
-                            do
+                        
+                        objSearchResult.Click();
+                        
+                        
+                        IList<IWebElement> PopUpBtn = LinkedIn_SearchPage.fnPopUpbtn();
+                        
+                        if (PopUpBtn.Count() > 0)
                             {
-                                LinkedIn_SearchPage.fnScrollUp();
-                                try
-                                {
-                                    objSearchResult.Click();
-                                    break;
-                                }
-                                catch (ElementClickInterceptedException)
-                                {
-                                    displayedFlag = false;
-                                    continue;
-                                }
+                                LinkedIn_SearchPage.fnClickPopUpBtn();
                             }
-                            while (!displayedFlag);
+                        else 
+                        {
+
+                            wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[text()='Información de contacto']")));
+                            
+                            IList<IWebElement> ConnectBtn = LinkedIn_SearchPage.fnConnectBtn();
+                            if (ConnectBtn.Count() > 0)
+                            {
+                                
+                                LinkedIn_SearchPage.fnScrollDownToSkills();
+                                file.Member.Add(LinkedIn_SearchPage.fnMemberInfo());
+                                if (arrLines[i].Contains("#")) { arrLines[i] = "CSharp"; }
+                                objRM.fnAddStepLogWithSnapshot(objTest, driver, "Data from Contact stored", $"{arrLines[i]}_Data_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
+                                driver.Navigate().Back();
+                            }
+                            else
+                            {
+                                driver.Navigate().Back();
+                            }
                         }
-                        wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[text()='Información de contacto' or text()='Contact info']")));
-                        LinkedIn_SearchPage.fnScrollDownToSkills();
-                        if (arrLines[i].Contains("#")) { arrLines[i] = "CSharp"; }
-                        objRM.fnAddStepLogWithSnapshot(objTest, driver, "Data from Contact stored", $"{arrLines[i]}_Data_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
-                        file.Member.Add(LinkedIn_SearchPage.fnMemberInfo());
-                        driver.Navigate().Back();
+                            
+
+                        LinkedIn_SearchPage.fnScrollDownResults();
+
 
                     }
-
-                    //    file.Member = LinkedIn_SearchPage.fnMemberInfo();
-
+                    
                     file.fnCreateFile(file.Member);
 
                     LinkedIn_SearchPage.fnClearFilters();
@@ -245,11 +208,11 @@ namespace AutomationTraining_M7.Test_Cases
 
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
             }
-        
+
         }
     }
 }
