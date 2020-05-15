@@ -19,10 +19,10 @@ namespace AutomationTraining_M7.Page_Objects
         /*LOCATORS FOR EACH ELEMENT*/
         readonly static string STR_USERNAME_TEXT = "username";
         readonly static string STR_PASSWORD_TEXT = "password";
-        readonly static string STR_SIGNIN_BTN = "//button[text()='Sign in']";
-        
+        readonly static string STR_SIGNIN_BTN = "//button[@class='btn__primary--large from__button--floating']";
+
         /*CONSTRUCTOR*/
-        public  LinkedIn_LoginPage(IWebDriver pobjDriver)
+        public LinkedIn_LoginPage(IWebDriver pobjDriver)
         {
             _objDriver = pobjDriver;
         }

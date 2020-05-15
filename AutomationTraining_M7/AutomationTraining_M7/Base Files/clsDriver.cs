@@ -27,7 +27,7 @@ namespace AutomationTraining_M7.Base_Files
         /*METHODS*/
         private IWebElement WaitForElementThread(IWebDriver pobjDriver, By by, string pstrDesc)
         {
-            Thread.Sleep(5000);
+            //Thread.Sleep(5000);
             objElement = pobjDriver.FindElement(by);
             return objElement;
         }
