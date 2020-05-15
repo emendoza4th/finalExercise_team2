@@ -1,5 +1,6 @@
 ﻿using AutomationTraining_M7.Base_Files;
 using AutomationTraining_M7.Data_Model;
+using AventStack.ExtentReports;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
@@ -15,10 +16,10 @@ namespace AutomationTraining_M7.Page_Objects
 {
     class LinkedIn_SearchPage : BaseTest
     {
-        public static WebDriverWait wait;
+        private static IWebDriver _ObjSrcDriver;
+        public static WebDriverWait objSrcWait;
 
         /*LOCATORS FOR EACH ELEMENT*/
-        private static IWebDriver _ObjSrcDriver;
         readonly static string STR_CAPTCHA_CLK = "//div[@class='recaptcha-checkbox-checkmark']";
         readonly static string STR_APPLY_BTN = "//button[@data-control-name='all_filters_apply']";
         readonly static string STR_SEARCH_BTN = "//div[@class='search-global-typeahead__controls']";
@@ -48,6 +49,7 @@ namespace AutomationTraining_M7.Page_Objects
         public LinkedIn_SearchPage(IWebDriver pobjSrcDriver)
         {
             _ObjSrcDriver = pobjSrcDriver;
+            objSrcWait = new WebDriverWait(_ObjSrcDriver, new TimeSpan(0, 0, 30));
         }
 
         /*IWEBELEMEMT OBJECTS*/
@@ -72,8 +74,8 @@ namespace AutomationTraining_M7.Page_Objects
         private static IList<IWebElement> objTools => _ObjSrcDriver.FindElements(By.XPath(STR_TOOLS));
         private static IWebElement objLProfileBtn => _ObjSrcDriver.FindElement(By.XPath(STR_LAST_PROFILE));
         private static IWebElement objPopUpBackBtn => _ObjSrcDriver.FindElement(By.XPath(STR_POPUP_BACK_BTN));
-        /*METHODS*/
         
+        /*METHODS*/
         //Get Member Info
         public static IList<IWebElement> GetLastJob()
         {
@@ -116,51 +118,87 @@ namespace AutomationTraining_M7.Page_Objects
             {
                 int height = _ObjSrcDriver.Manage().Window.Size.Height;
                 int actual = 0;
-                wait = new WebDriverWait(driver, new TimeSpan(0, 1, 0));
+                objSrcWait = new WebDriverWait(driver, new TimeSpan(0, 1, 0));
                 Actions actions = new Actions(_ObjSrcDriver);
+                Status logStatus;
+
+                try { 
                 InfoCandidate.ActorName = objName[i].Text;
                 Console.WriteLine("Name: " + objName[i].Text);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Element not existing for the candidate" + e.Message);
+                    logStatus = Status.Warning;
+                    objTest.Log(Status.Warning, "Element not existing for the candidate. Error: " + e.Message);
+                    continue;
+                }
 
-                Console.WriteLine();
-                InfoCandidate.ProfileRole = objRole[i].Text;
-                Console.WriteLine("Role: " + objRole[i].Text);
+                try
+                {
+                    Console.WriteLine();
+                    InfoCandidate.ProfileRole = objRole[i].Text;
+                    Console.WriteLine("Role: " + objRole[i].Text);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Element not existing for the candidate" + e.Message);
+                    logStatus = Status.Warning;
+                    objTest.Log(Status.Warning, "Element not existing for the candidate. Error: " + e.Message);
+                    continue;
+                }
 
-                Console.WriteLine();
-                objURL.Add(_ObjSrcDriver.Url);
-                InfoCandidate.LinkedInUrl = objURL[i];
-                Console.WriteLine("URL: " + objURL[i]);
+                try
+                {
+                    Console.WriteLine();
+                    objURL.Add(_ObjSrcDriver.Url);
+                    InfoCandidate.LinkedInUrl = objURL[i];
+                    Console.WriteLine("URL: " + objURL[i]);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Element not existing for the candidate" + e.Message);
+                    logStatus = Status.Warning;
+                    objTest.Log(Status.Warning, "Element not existing for the candidate. Error: " + e.Message);
+                    continue;
+                }
 
-                Console.WriteLine();
                 do
                 {
                     fnScrollDownToSkills();
                     GetLastJob();
                 }
                 while (objLastJob.Count == 0);
-                wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_LAST_JOB)));
+                objSrcWait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_LAST_JOB)));
                 try
                 {
+                    Console.WriteLine();
                     InfoCandidate.LastJob = objLastJob[i].Text;
                     Console.WriteLine("Last Job: " + objLastJob[i].Text);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Console.WriteLine("Element not existing for the candidate" + e.Message);
+                    logStatus = Status.Warning;
+                    objTest.Log(Status.Warning, "Element not existing for the candidate. Error: " + e.Message);
                     continue;
                 }
-                Console.WriteLine();
 
-                wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_EXPERIENCE)));
+                objSrcWait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_EXPERIENCE)));
                 try
                 {
+                    Console.WriteLine();
                     InfoCandidate.Experience = objExp[i].Text;
                     Console.WriteLine("Experience: " + objExp[i].Text);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Console.WriteLine("Element not existing for the candidate" + e.Message);
+                    logStatus = Status.Warning;
+                    objTest.Log(Status.Warning, "Element not existing for the candidate. Error: " + e.Message);
                     continue;
                 }
 
-                Console.WriteLine();
                 do
                 {
                     fnScrollDownToSkills();
@@ -179,47 +217,38 @@ namespace AutomationTraining_M7.Page_Objects
                     }
                 }
                 while (actual < height);
-                wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(STR_SHOW_MORE_BTN)));
-                wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_SKILLS)));
+                objSrcWait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(STR_SHOW_MORE_BTN)));
+                objSrcWait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_SKILLS)));
                 try
                 {
+                    Console.WriteLine();
                     InfoCandidate.SkillsValidations = objSkills[i].Text;
                     Console.WriteLine("Skills and Validations: " + objSkills[i].Text);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Console.WriteLine("Element not existing for the candidate" + e.Message);
+                    logStatus = Status.Warning;
+                    objTest.Log(Status.Warning, "Element not existing for the candidate. Error: " + e.Message);
                     continue;
                 }
-                Console.WriteLine();
 
-                
                 try
                 {
-                    wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_TOOLS)));
+                    Console.WriteLine();
+                    objSrcWait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_TOOLS)));
                     InfoCandidate.ToolsTechnologies = objTools[i].Text;
                     Console.WriteLine("Tools and Technologies: " + objTools[i].Text);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Console.WriteLine("Element not existing for the candidate" + e.Message);
+                    logStatus = Status.Warning;
+                    objTest.Log(Status.Warning, "Element not existing for the candidate. Error: " + e.Message);
                     continue;
                 }
 
                 Console.WriteLine("____________________________________________________");
-
-                //Export info to CSV file
-                //CODE TO  GET CANDIDATE DATA
-
-                //Can this be used all together?
-                //InfoCandidate = new Candidates
-                //{
-                //    ActorName = objName[i].Text,
-                //    ProfileRole = objRole[i].Text,
-                //    LinkedInUrl = objURL[i],
-                //    LastJob = objLastJob[i].Text,
-                //    Experience = objExp[i].Text,
-                //    SkillsValidations = objSkills[i].Text,
-                //    ToolsTechnologies = objTools[i].Text
-                //};
             }
             return InfoCandidate;
         }

@@ -25,12 +25,10 @@ namespace AutomationTraining_M7.Test_Cases
         //IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
         
         [Test]
-        
         public void Search_LinkedIn()
         {
             try
             {
-
                 //VARIABLES
                 //Report object.
                 objTest = objExtent.CreateTest(TestContext.CurrentContext.Test.Name);
@@ -74,10 +72,6 @@ namespace AutomationTraining_M7.Test_Cases
                     return;
                 }
 
-                
-                
-                //string[] arrLanguages = { "English" };
-
                 //Step# 1 .- Log In 
                 objSearch = new LinkedIn_SearchPage(driver);
                 Login_LinkedIn();
@@ -114,7 +108,6 @@ namespace AutomationTraining_M7.Test_Cases
                     objRM.fnAddStepLogWithSnapshot(objTest, driver, "Technology search.", "Search.png", "Pass");
                     ExportDataCsv file = new ExportDataCsv(arrLines[i]);
                     wait = new WebDriverWait(driver, new TimeSpan(0, 1, 0));
-                    //Console.WriteLine("Aqui");
                     wait.Until(ExpectedConditions.UrlContains("search/results"));
                     wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[span[text()='People' or text()='Gente']]")));
 
@@ -125,7 +118,6 @@ namespace AutomationTraining_M7.Test_Cases
                     }
                     catch (StaleElementReferenceException)
                     {
-                        //wait.Until(ExpectedConditions.StalenessOf(LinkedIn_SearchPage.GetPeopleCB()));
                         LinkedIn_SearchPage.fnSelectPeople();
                     }
                     wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@class='search-vertical-filter__dropdown-trigger-text mr1'][text()='People' or text()='Gente']")));

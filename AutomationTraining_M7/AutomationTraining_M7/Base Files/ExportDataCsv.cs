@@ -20,7 +20,6 @@ namespace AutomationTraining_M7.Base_Files
         public ExportDataCsv(string pstrTechnologies)
         {
             FileName = $"{pstrTechnologies}_{DateTime.Now.ToString("MMddyyyy_HHmmss")}.xlsx";
-           // Header = "Actor Name|Profile/Role|LinkedIn URL|Last Job|Experience|Skills and Validations|Tools and technologies";
             Member = new List<Candidates>();
         }
         
@@ -97,7 +96,6 @@ namespace AutomationTraining_M7.Base_Files
                 Stream excelStream = File.Create(Path.GetFullPath(fnGetCSVPath() + FileName));
                 workbook.SaveAs(excelStream);
                 excelStream.Dispose();
-                excelStream.Close();
             }
         }
     }

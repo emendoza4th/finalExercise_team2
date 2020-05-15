@@ -15,15 +15,5 @@ namespace AutomationTraining_M7.Data_Model
         public string Experience { get; set; }
         public string SkillsValidations { get; set; }
         public string ToolsTechnologies { get; set; }
-
-
     }
-
-    //public class Candidates_File
-    //{
-    //    public string FileName { get; set; }
-    //    public string Header { get; set; }
-    //    public List<Candidates> Member { get; set; }
-    //}
-    
 }

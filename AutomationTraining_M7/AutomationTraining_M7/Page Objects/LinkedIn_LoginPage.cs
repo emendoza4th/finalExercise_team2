@@ -1,6 +1,8 @@
 ﻿using AutomationTraining_M7.Base_Files;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,7 +16,7 @@ namespace AutomationTraining_M7.Page_Objects
     {
         /*DRIVER REFERENCE FOR POM*/
         private static IWebDriver _objDriver;
-
+        private static WebDriverWait objWait;
 
         /*LOCATORS FOR EACH ELEMENT*/
         readonly static string STR_USERNAME_TEXT = "username";
@@ -25,6 +27,7 @@ namespace AutomationTraining_M7.Page_Objects
         public  LinkedIn_LoginPage(IWebDriver pobjDriver)
         {
             _objDriver = pobjDriver;
+            objWait = new WebDriverWait(_objDriver, new TimeSpan(0, 0, 30));
         }
 
         /*IWEBELEMEMT OBJECTS*/
@@ -41,6 +44,8 @@ namespace AutomationTraining_M7.Page_Objects
 
         public static void fnEnterUserName(string pstrUserName)
         {
+            objWait.Until(ExpectedConditions.ElementExists(By.Id(STR_USERNAME_TEXT)));
+            objWait.Until(ExpectedConditions.ElementIsVisible(By.Id(STR_USERNAME_TEXT)));
             objUserNameTxt.Clear();
             objUserNameTxt.SendKeys(pstrUserName);
         }
@@ -53,6 +58,8 @@ namespace AutomationTraining_M7.Page_Objects
 
         public static void fnEnterPassword(string pstrPassword)
         {
+            objWait.Until(ExpectedConditions.ElementExists(By.Id(STR_PASSWORD_TEXT)));
+            objWait.Until(ExpectedConditions.ElementIsVisible(By.Id(STR_PASSWORD_TEXT)));
             objPasswordTxt.Clear();
             objPasswordTxt.SendKeys(pstrPassword);
         }
@@ -65,6 +72,9 @@ namespace AutomationTraining_M7.Page_Objects
 
         public static void fnClickSignInButton()
         {
+            objWait.Until(ExpectedConditions.ElementExists(By.XPath(STR_SIGNIN_BTN)));
+            objWait.Until(ExpectedConditions.ElementIsVisible(By.XPath(STR_SIGNIN_BTN)));
+            objWait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(STR_SIGNIN_BTN)));
             objSignInBtn.Click();
         }
 
