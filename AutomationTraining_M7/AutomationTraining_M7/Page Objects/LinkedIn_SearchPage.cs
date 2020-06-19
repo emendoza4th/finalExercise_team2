@@ -43,6 +43,12 @@ namespace AutomationTraining_M7.Page_Objects
         readonly static string STR_TOOLS = "//div[@class='pv-skill-category-list pv-profile-section__section-info mb6 ember-view']/h3[text()='Herramientas y tecnologías']/following-sibling::ol";
         readonly static string STR_LAST_PROFILE = "(//span[@class='name actor-name'])[10]";
         readonly static string STR_POPUP_BACK_BTN = "//span[text()='Volver']";
+        readonly static string STR_MESSAGE_BTN = "//span[text()='Enviar mensaje']";
+        readonly static string STR_MESSAGE_SCREEN = "//*[@class='msg-form__contenteditable t-14 t-black--light t-normal flex-grow-1 notranslate']//p";
+        readonly static string STR_MESSAGE_SEND = "//button[text()='Enviar' or text()='Send']";
+        readonly static string STR_SUBMIT_BTN = "//*[@type='submit']";
+        readonly static string STR_NEXT_BTN = "//span[text()='Siguiente']";
+
 
         //test
         /*CONSTRUCTOR*/
@@ -74,6 +80,11 @@ namespace AutomationTraining_M7.Page_Objects
         private static IList<IWebElement> objTools => _ObjSrcDriver.FindElements(By.XPath(STR_TOOLS));
         private static IWebElement objLProfileBtn => _ObjSrcDriver.FindElement(By.XPath(STR_LAST_PROFILE));
         private static IWebElement objPopUpBackBtn => _ObjSrcDriver.FindElement(By.XPath(STR_POPUP_BACK_BTN));
+        private static IWebElement objSendMessageBtn => _ObjSrcDriver.FindElement(By.XPath(STR_MESSAGE_BTN));
+        private static IWebElement objMessageScreen => _ObjSrcDriver.FindElement(By.XPath(STR_MESSAGE_SCREEN));
+        private static IWebElement objMessageSendBtn => _ObjSrcDriver.FindElement(By.XPath(STR_MESSAGE_SEND));
+        private static IWebElement objSubmitBtn => _ObjSrcDriver.FindElement(By.XPath(STR_SUBMIT_BTN));
+        private static IWebElement objNextBtn => _ObjSrcDriver.FindElement(By.XPath(STR_NEXT_BTN));
         
         /*METHODS*/
         //Get Member Info
@@ -288,6 +299,8 @@ namespace AutomationTraining_M7.Page_Objects
             objSearchBtn.Click();
         }
 
+        
+
         //People Checkbox
         public static IWebElement GetPeopleCB()
         {
@@ -418,6 +431,51 @@ namespace AutomationTraining_M7.Page_Objects
             IList<IWebElement> objConnectBtn = driver.FindElements(By.XPath("//span[text()='Conectar' or text()='Connect']/.."));
             return objConnectBtn;
         }
+        //Verify current job
+        public static IList<IWebElement> CurrentJob()
+        {
+            IList<IWebElement> objCurrentJob = driver.FindElements(By.XPath("//span[text()='4th Source' or text()='4thSource' or text()='AgileThought' or text()='Agile Thought']/.."));
+            return objCurrentJob;
+        }
+        //Send message
+        private IWebElement SendMessage()
+        {
+            return objSendMessageBtn;
+        }
+
+        public static void fnClickSendMessage()
+        {
+            objSendMessageBtn.Click();
+        }
+        private IWebElement MessageScreen()
+        {
+            return objMessageScreen;
+        }
+        public static void fnSendMessage(string pstrSendMessage)
+        {
+            objMessageScreen.Click();
+            objMessageScreen.SendKeys(pstrSendMessage);
+        }
+
+        private IWebElement MessageSendButton()
+        {
+            return objMessageSendBtn;
+        }
+
+        public static void fnClickMessageSend()
+        {
+            objMessageSendBtn.Click();
+        }
+        private IWebElement NextBtn()
+        {
+            return objNextBtn;
+        }
+
+        public static void fnClickNextBtn()
+        {
+            objNextBtn.Click();
+        }
+
 
         public static IWebElement GetElement(By by)
         {
@@ -429,3 +487,4 @@ namespace AutomationTraining_M7.Page_Objects
         }
     }
 }
+
