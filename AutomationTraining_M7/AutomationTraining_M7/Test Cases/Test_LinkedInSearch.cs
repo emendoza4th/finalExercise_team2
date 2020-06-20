@@ -14,7 +14,8 @@ using AutomationTraining_M7.Base_Files;
 using AutomationTraining_M7.Data_Model;
 using System.IO;
 using Excel = Microsoft.Office.Interop.Excel;
-
+using Excel;
+using System.Data.OleDb;
 
 
 namespace AutomationTraining_M7.Test_Cases
@@ -23,6 +24,7 @@ namespace AutomationTraining_M7.Test_Cases
     {
         //LinkedIn_LoginPage objLogin; -- DELETE
         public WebDriverWait wait;
+        ExcelReader excel;
         LinkedIn_SearchPage objSearch;
         //IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
         
@@ -41,14 +43,16 @@ namespace AutomationTraining_M7.Test_Cases
                     userpath = Directory.GetParent(userpath).ToString();
                 }
 
-                string filepath = userpath + "\\Documents\\Technologies.txt";
+                //string filepath = userpath + "\\Documents\\Technologies.txt";
+                excel = new ExcelReader(userpath + "\\Documents\\Setup_LinkedIn.xlsx");
+                excel.SetWorkSheet("SetupSearch");
+                var rows = excel.getLinkedInRows();
 
 
 
 
 
-
-                string[] arrLines = System.IO.File.ReadAllLines(filepath);
+                /*string[] arrLines = System.IO.File.ReadAllLines(filepath);
                 //Check if the file exists, if not create it and write alert
                 if (File.Exists(filepath))
                 {
@@ -78,7 +82,7 @@ namespace AutomationTraining_M7.Test_Cases
                     Console.WriteLine($"The input file for tech nologies was not found, please go to {filepath} and update the file contents.");
 
                     return;
-                }
+                }*/
 
                 //Step# 1 .- Log In 
                 objSearch = new LinkedIn_SearchPage(driver);
@@ -106,15 +110,19 @@ namespace AutomationTraining_M7.Test_Cases
                         }
                     }
                 }
+                
+
+                //for (int fileRow = 0; fileRow < rows.Count()) 
 
                 //Step# 3 .- Set Filters
-                for (int i = 0; i < arrLines.Length; i++)
+                //for (int i = 0; i < arrLines.Length; i++)
+                foreach (var person in rows)
                 {
                     objSearch = new LinkedIn_SearchPage(driver);
-                    LinkedIn_SearchPage.fnEnterSearchText(arrLines[i]);
+                    LinkedIn_SearchPage.fnEnterSearchText(person.Technology);
                     LinkedIn_SearchPage.fnClickSearchBtn();
                     objRM.fnAddStepLogWithSnapshot(objTest, driver, "Technology search.", "Search.png", "Pass");
-                    ExportDataCsv file = new ExportDataCsv(arrLines[i]);
+                    ExportDataCsv file = new ExportDataCsv(person.Technology);
                     wait = new WebDriverWait(driver, new TimeSpan(0, 1, 0));
                     wait.Until(ExpectedConditions.UrlContains("search/results"));
                     wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[span[text()='People' or text()='Gente']]")));
@@ -130,12 +138,20 @@ namespace AutomationTraining_M7.Test_Cases
                     }
                     wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@class='search-vertical-filter__dropdown-trigger-text mr1'][text()='People' or text()='Gente']")));
                     wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[span[text()='All Filters' or text()='Todos los filtros']]")));
-                    objRM.fnAddStepLogWithSnapshot(objTest, driver, "People filtered", $"{arrLines[i]}_People_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
+                    //objRM.fnAddStepLogWithSnapshot(objTest, driver, "People filtered", $"{arrLines[i]}_People_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
 
                     //Step# 5 .- Locations selection
                     LinkedIn_SearchPage.fnSelectAllFilters();
-                    wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@placeholder='Add a country/region' or @placeholder='Añadir un país o región'][@aria-label='Add a country/region' or @aria-label='Añadir un país o región']")));
-                    LinkedIn_SearchPage.fnAddCountry("Mexico");
+                    foreach (var countries in rows)
+                    {
+                        var splittedFilter = countries.Location.Split(';').ToList();
+                        foreach (var filter in splittedFilter)
+                        {
+                            LinkedIn_SearchPage.fnAddCountry(filter);
+                        }
+                    }
+                    /*wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@placeholder='Add a country/region' or @placeholder='Añadir un país o región'][@aria-label='Add a country/region' or @aria-label='Añadir un país o región']")));
+                    LinkedIn_SearchPage.fnAddCountry(person.Location);
                     try
                     {
                         wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//*[@class='search-basic-typeahead search-vertical-typeahead ember-view']//*[@class='basic-typeahead__selectable ember-view']//span[text()= 'Mexico' or text()='México']")));
@@ -147,16 +163,25 @@ namespace AutomationTraining_M7.Test_Cases
                         wait.Until(ExpectedConditions.StalenessOf(LinkedIn_SearchPage.SelectMexico()));
                         LinkedIn_SearchPage.fnSelectMexico();
                     }
-                    objRM.fnAddStepLogWithSnapshot(objTest, driver, "Select Country", $"{arrLines[i]}_Location_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
-                    
+                    objRM.fnAddStepLogWithSnapshot(objTest, driver, "Select Country", $"{arrLines[i]}_Location_{DateTime.Now.ToString("HHmmss")}.png", "Pass");*/
+
 
                     //Step 6 .- Language selection.
-                    LinkedIn_SearchPage.fnLanguageEng();
-                    objRM.fnAddStepLogWithSnapshot(objTest, driver, "Language selection", $"{arrLines[i]}_Language_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
+                    foreach (var lenguaje in rows)
+                    {
+                        var splittedFilter = lenguaje.Languajes.Split(';').ToList();
+                        
+                        foreach (var filter in splittedFilter)
+                        {
+                            LinkedIn_SearchPage.fnLanguages(filter);
+                        }
+                    }
+
+                    //objRM.fnAddStepLogWithSnapshot(objTest, driver, "Language selection", $"{arrLines[i]}_Language_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
 
                     //Step# 7 .- Apply the Filters
                     LinkedIn_SearchPage.fnClickApplyBtn();
-                    objRM.fnAddStepLogWithSnapshot(objTest, driver, "Filters Applied", $"{arrLines[i]}_Filters_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
+                    //objRM.fnAddStepLogWithSnapshot(objTest, driver, "Filters Applied", $"{arrLines[i]}_Filters_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
                     Thread.Sleep(5000);
                     
                     IList<IWebElement> allSearchResults = LinkedIn_SearchPage.fnAllResultPage();
@@ -202,11 +227,12 @@ namespace AutomationTraining_M7.Test_Cases
                                 {
                                     LinkedIn_SearchPage.fnScrollDownToSkills();
                                     file.Member.Add(LinkedIn_SearchPage.fnMemberInfo());
-                                    if (arrLines[i].Contains("#")) { arrLines[i] = "CSharp"; }
-                                    objRM.fnAddStepLogWithSnapshot(objTest, driver, "Data from Contact stored", $"{arrLines[i]}_Data_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
+                                    //if (arrLines[i].Contains("#")) { arrLines[i] = "CSharp"; }
+                                    //objRM.fnAddStepLogWithSnapshot(objTest, driver, "Data from Contact stored", $"{arrLines[i]}_Data_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
                                     Console.WriteLine(memberCount);
                                     driver.Navigate().Back();
                                 }
+                                
                                 else
                                 {
                                     LinkedIn_SearchPage.fnClickSendMessage();
@@ -217,6 +243,17 @@ namespace AutomationTraining_M7.Test_Cases
                                     driver.Navigate().Back();
                                     
                                 }
+                               /* foreach (var technologies in rows)
+                                {
+                                    var splittedFilter = technologies.Technology.Split(';').ToList();
+
+                                    foreach (var filter in splittedFilter)
+                                    {
+                                        LinkedIn_SearchPage.fnGetToolsAndTech(filter);
+                                    }
+                                    
+                                }*/
+
                             }
                             
                         }

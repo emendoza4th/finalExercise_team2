@@ -12,6 +12,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Data.OleDb;
+using System.Collections;
 
 namespace AutomationTraining_M7.Page_Objects
 {
@@ -31,7 +33,8 @@ namespace AutomationTraining_M7.Page_Objects
         readonly static string STR_LANG_ESP_CB = "//label[text()='Spanish' or text()='Español']";
         readonly static string STR_REGIONMX_CB = "//label[text()='Mexico' or text()='México']";
         readonly static string STR_ADDCOUNTTRY_TEXT = "//input[@placeholder='Add a country/region' or @placeholder='Añadir un país o región'][@aria-label='Add a country/region' or @aria-label='Añadir un país o región']";
-        readonly static string STR_SELECT_MEXICO_DD = "//*[@class='search-basic-typeahead search-vertical-typeahead ember-view']//*[@class='basic-typeahead__selectable ember-view']//span[text()= 'Mexico' or text()='México']";
+        //readonly static string STR_SELECT_MEXICO_DD = "//*[@class='search-basic-typeahead search-vertical-typeahead ember-view']//*[@class='basic-typeahead__selectable ember-view']//span[text()= 'Mexico' or text()='México']";
+        readonly static string STR_SELECT_MEXICO_DD = "//*[contains(@id='sf-profileLanguage-')]";
         readonly static string STR_CLEAR_FILTERS = "//div[@id='inbug-nav-item']";
         readonly static string STR_TOTAL_RESULTS_WO = "//ul[@class='search-results__list list-style-none ']/li/div/div[1]/div[2]/a/h3/span/span/span[1]";
         readonly static string STR_NAME = "//li[@class='inline t-24 t-black t-normal break-words']";
@@ -113,7 +116,29 @@ namespace AutomationTraining_M7.Page_Objects
         public static void fnScrollDownResults()
         {
             IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-            js.ExecuteScript("window.scrollBy(0,200)");
+            js.ExecuteScript(
+                @"let limit = document.getElementsByClassName('search-result__wrapper').length;
+                let i = 0;
+                window.scrollTo(0, document.body.scrollHeight);
+                var Scroller = setInterval(LoopThroughPersons, 500);
+                function LoopThroughPersons()
+            {
+                if (i < limit)
+                {
+                    var element = document.getElementsByClassName('search-result__wrapper')[i];
+                    element.scrollIntoView({
+                    block: 'end',
+                behavior: 'smooth'
+                    });
+            }
+    
+                if (i > limit) {
+                clearInterval(Scroller);
+                window.scrollTo(0,document.body.scrollHeight);
+                }
+                limit = document.getElementsByClassName('search-result__wrapper').length;
+                i++;
+            }");
             Thread.Sleep(2000);
         }
         
@@ -350,7 +375,35 @@ namespace AutomationTraining_M7.Page_Objects
 
         public static void fnLanguageEng()
         {
+            
             objLangEngCb.Click();
+        }
+
+        public static void fnLanguages(string pLanguage)
+        {
+            string languageOpt = pLanguage;
+                switch(languageOpt.ToLower())
+            {
+                case "español":
+                    objLangEspCb.Click();
+                    break;
+
+                case "spanish":
+                    objLangEspCb.Click();
+                    break;
+
+                case "inglés":
+                    objLangEngCb.Click();
+                    break;
+
+                case "ingles":
+                    objLangEngCb.Click();
+                    break;
+
+                case "english":
+                    objLangEngCb.Click();
+                    break;
+            }
         }
 
         public static void fnSelectLanguage(string pstrLanguage)
@@ -395,6 +448,9 @@ namespace AutomationTraining_M7.Page_Objects
             objAddCountryTxt.Click();
             objAddCountryTxt.Clear();
             objAddCountryTxt.SendKeys(pstrAddCountry);
+            Thread.Sleep(2000);
+            objAddCountryTxt.SendKeys(Keys.ArrowDown);
+            objAddCountryTxt.SendKeys(Keys.Enter);
         }
 
         public static IWebElement SelectMexico()
@@ -488,8 +544,25 @@ namespace AutomationTraining_M7.Page_Objects
         public static IList<IWebElement> GetToolsAndTech()
         {
             return objToolsTech;
+
         }
 
+        /*public static void fnGetToolsAndTech(string pToolsTech)
+        {
+            List<String> tech2 = new ArrayList<String>();
+            string toolsTech = pToolsTech;
+            foreach (var technologies in objToolsTech)
+            {
+                string tech = technologies;
+                if (tech = toolsTech)
+                {
+
+                }
+            }
+
+        }*/
+
+       
         /*public void calcJobtime()
         {
             /*foreach (var jobTime in objJobTime)
