@@ -41,7 +41,13 @@ namespace AutomationTraining_M7.Test_Cases
                     userpath = Directory.GetParent(userpath).ToString();
                 }
 
-                string filepath = userpath + "\\Documents\\Setup_LinkedIn.xlsx";
+                string filepath = userpath + "\\Documents\\Technologies.txt";
+
+
+
+
+
+
                 string[] arrLines = System.IO.File.ReadAllLines(filepath);
                 //Check if the file exists, if not create it and write alert
                 if (File.Exists(filepath))
@@ -154,7 +160,9 @@ namespace AutomationTraining_M7.Test_Cases
                     Thread.Sleep(5000);
                     
                     IList<IWebElement> allSearchResults = LinkedIn_SearchPage.fnAllResultPage();
-                    
+
+                    int memberCount = 1;
+
                     //Step# 8 .- Get the People information
                     for (int b = 0; b < allSearchResults.Count; b++)
                     {
@@ -174,14 +182,17 @@ namespace AutomationTraining_M7.Test_Cases
                         if (PopUpBtn.Count() > 0)
                         {
                             LinkedIn_SearchPage.fnClickPopUpBtn();
+                            Console.WriteLine(memberCount);
                         }
                         else
                         {
 
                             wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[text()='Información de contacto']")));
+                            
 
                             if (CurrentJob.Count() > 0)
                             {
+                                Console.WriteLine(memberCount);
                                 driver.Navigate().Back();
                             }
                             else
@@ -193,25 +204,30 @@ namespace AutomationTraining_M7.Test_Cases
                                     file.Member.Add(LinkedIn_SearchPage.fnMemberInfo());
                                     if (arrLines[i].Contains("#")) { arrLines[i] = "CSharp"; }
                                     objRM.fnAddStepLogWithSnapshot(objTest, driver, "Data from Contact stored", $"{arrLines[i]}_Data_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
-                                    LinkedIn_SearchPage.fnClickSendMessage();
-                                    wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@class='msg-form__contenteditable t-14 t-black--light t-normal flex-grow-1 notranslate']//p")));
-                                    LinkedIn_SearchPage.fnSendMessage("test");
-                                    LinkedIn_SearchPage.fnClickMessageSend();
+                                    Console.WriteLine(memberCount);
                                     driver.Navigate().Back();
                                 }
                                 else
                                 {
                                     LinkedIn_SearchPage.fnClickSendMessage();
+                                    wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@class='msg-form__contenteditable t-14 t-black--light t-normal flex-grow-1 notranslate']//p")));
+                                    LinkedIn_SearchPage.fnSendMessage("test");
+                                    LinkedIn_SearchPage.fnClickMessageSend();
+                                    Console.WriteLine(memberCount);
                                     driver.Navigate().Back();
+                                    
                                 }
                             }
                             
                         }
-
+                        memberCount = memberCount + 1;
 
                         LinkedIn_SearchPage.fnScrollDownResults();
-
-
+                        if (memberCount > 10)
+                        {
+                            LinkedIn_SearchPage.fnClickNextBtn();
+                            memberCount = 1;
+                        }
                     }
                     
                     file.fnCreateFile(file.Member);

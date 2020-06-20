@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AutomationTraining_M7.Page_Objects
@@ -48,6 +49,8 @@ namespace AutomationTraining_M7.Page_Objects
         readonly static string STR_MESSAGE_SEND = "//button[text()='Enviar' or text()='Send']";
         readonly static string STR_SUBMIT_BTN = "//*[@type='submit']";
         readonly static string STR_NEXT_BTN = "//span[text()='Siguiente']";
+        readonly static string STR_TOOLS_TECH = "//h3[contains(text(),'Herramientas y tecnologías') or contains(text(),'Tools and technologies')]/following-sibling::ol/li";
+        readonly static string STR_JOB_TIME = "//span[contains(text(),'Duración del empleo')]/following-sibling::span";
 
 
         //test
@@ -85,7 +88,10 @@ namespace AutomationTraining_M7.Page_Objects
         private static IWebElement objMessageSendBtn => _ObjSrcDriver.FindElement(By.XPath(STR_MESSAGE_SEND));
         private static IWebElement objSubmitBtn => _ObjSrcDriver.FindElement(By.XPath(STR_SUBMIT_BTN));
         private static IWebElement objNextBtn => _ObjSrcDriver.FindElement(By.XPath(STR_NEXT_BTN));
-        
+        private static IList<IWebElement> objToolsTech => _ObjSrcDriver.FindElements(By.XPath(STR_TOOLS_TECH));
+        private static IList<IWebElement> objJobTime => _ObjSrcDriver.FindElements(By.XPath(STR_JOB_TIME));
+
+
         /*METHODS*/
         //Get Member Info
         public static IList<IWebElement> GetLastJob()
@@ -107,7 +113,8 @@ namespace AutomationTraining_M7.Page_Objects
         public static void fnScrollDownResults()
         {
             IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-            js.ExecuteScript("window.scrollBy(0,150)");
+            js.ExecuteScript("window.scrollBy(0,200)");
+            Thread.Sleep(2000);
         }
         
         //EDSP
@@ -473,11 +480,44 @@ namespace AutomationTraining_M7.Page_Objects
 
         public static void fnClickNextBtn()
         {
-            objNextBtn.Click();
+            objNextBtn.Click();   
         }
 
 
-        public static IWebElement GetElement(By by)
+        //Get Tools and Technologies 
+        public static IList<IWebElement> GetToolsAndTech()
+        {
+            return objToolsTech;
+        }
+
+        /*public void calcJobtime()
+        {
+            /*foreach (var jobTime in objJobTime)
+            {
+                objJobTime.Add(jobTime.ToString());
+            }
+
+           /* String[] jobTime = new String[links.size()];
+            int i = 0;
+
+            //Storing List elements text into String array
+            for (IWebElement a: links)
+            {
+                jobTime[i] = a.getText();
+                i++;
+            }
+        }*/
+
+        //Get Tools and Technologies 
+        public static IList<IWebElement> GetJobTimeList()
+        {
+            return objJobTime;
+
+        }
+        
+        
+
+    public static IWebElement GetElement(By by)
         {
             return _ObjSrcDriver.FindElement(by);
         }
