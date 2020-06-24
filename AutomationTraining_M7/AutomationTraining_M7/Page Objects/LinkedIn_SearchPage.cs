@@ -34,7 +34,7 @@ namespace AutomationTraining_M7.Page_Objects
         readonly static string STR_REGIONMX_CB = "//label[text()='Mexico' or text()='México']";
         readonly static string STR_ADDCOUNTTRY_TEXT = "//input[@placeholder='Add a country/region' or @placeholder='Añadir un país o región'][@aria-label='Add a country/region' or @aria-label='Añadir un país o región']";
         //readonly static string STR_SELECT_MEXICO_DD = "//*[@class='search-basic-typeahead search-vertical-typeahead ember-view']//*[@class='basic-typeahead__selectable ember-view']//span[text()= 'Mexico' or text()='México']";
-        readonly static string STR_SELECT_MEXICO_DD = "//*[contains(@id='sf-profileLanguage-')]";
+        readonly static string STR_SELECT_MEXICO_DD = "//*[contains(@id,'sf-profileLanguage-')]";
         readonly static string STR_CLEAR_FILTERS = "//div[@id='inbug-nav-item']";
         readonly static string STR_TOTAL_RESULTS_WO = "//ul[@class='search-results__list list-style-none ']/li/div/div[1]/div[2]/a/h3/span/span/span[1]";
         readonly static string STR_NAME = "//li[@class='inline t-24 t-black t-normal break-words']";
@@ -75,7 +75,9 @@ namespace AutomationTraining_M7.Page_Objects
         private static IWebElement objLangEspCb => _ObjSrcDriver.FindElement(By.XPath(STR_LANG_ESP_CB));
         private static IWebElement objApplyBtn => _ObjSrcDriver.FindElement(By.XPath(STR_APPLY_BTN));
         private static IWebElement objAddCountryTxt => _ObjSrcDriver.FindElement(By.XPath(STR_ADDCOUNTTRY_TEXT));
-        private static IWebElement objSelectMexicoDD => _ObjSrcDriver.FindElement(By.XPath(STR_SELECT_MEXICO_DD));
+        /*private static IWebElement objSelectMexicoDD(String lang) => _ObjSrcDriver.FindElement(
+            By.XPath("//*[contains(@id,'sf-profileLanguage-"+lang+"')]"
+                ));*/
         private static IWebElement objClearFilters => _ObjSrcDriver.FindElement(By.XPath(STR_CLEAR_FILTERS));
         private static IWebElement objShowMore => _ObjSrcDriver.FindElement(By.XPath(STR_SHOW_MORE_BTN));
         private static IList<IWebElement> objName => _ObjSrcDriver.FindElements(By.XPath(STR_NAME));
@@ -131,17 +133,10 @@ namespace AutomationTraining_M7.Page_Objects
                 behavior: 'smooth'
                     });
             }
-    
-                if (i > limit) {
-                clearInterval(Scroller);
-                window.scrollTo(0,document.body.scrollHeight);
-                }
-                limit = document.getElementsByClassName('search-result__wrapper').length;
-                i++;
             }");
-            Thread.Sleep(2000);
+            Thread.Sleep(5000);
         }
-        
+
         //EDSP
         public static void fnScrollUp()
         {
@@ -382,6 +377,7 @@ namespace AutomationTraining_M7.Page_Objects
         public static void fnLanguages(string pLanguage)
         {
             string languageOpt = pLanguage;
+            Console.WriteLine(languageOpt);
                 switch(languageOpt.ToLower())
             {
                 case "español":
@@ -403,6 +399,10 @@ namespace AutomationTraining_M7.Page_Objects
                 case "english":
                     objLangEngCb.Click();
                     break;
+                default:
+                    objLangEngCb.Click();
+                    break;
+
             }
         }
 
@@ -453,7 +453,7 @@ namespace AutomationTraining_M7.Page_Objects
             objAddCountryTxt.SendKeys(Keys.Enter);
         }
 
-        public static IWebElement SelectMexico()
+        /*public static IWebElement SelectMexico()
         {
             return objSelectMexicoDD;
         }
@@ -463,7 +463,7 @@ namespace AutomationTraining_M7.Page_Objects
         {
             objSelectMexicoDD.Click();
         }
-
+        */
         private IWebElement ClearFilters()
         {
             return objClearFilters;
@@ -529,7 +529,7 @@ namespace AutomationTraining_M7.Page_Objects
         {
             objMessageSendBtn.Click();
         }
-        private IWebElement NextBtn()
+        public static IWebElement NextBtn()
         {
             return objNextBtn;
         }
@@ -599,5 +599,6 @@ namespace AutomationTraining_M7.Page_Objects
             elementToSearch.Click();
         }
     }
+
 }
 

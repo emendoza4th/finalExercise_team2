@@ -144,7 +144,7 @@ namespace AutomationTraining_M7.Test_Cases
                     LinkedIn_SearchPage.fnSelectAllFilters();
                     foreach (var countries in rows)
                     {
-                        var splittedFilter = countries.Location.Split(';').ToList();
+                        var splittedFilter = countries.Location.Trim().Split(';').ToList();
                         foreach (var filter in splittedFilter)
                         {
                             LinkedIn_SearchPage.fnAddCountry(filter);
@@ -182,91 +182,101 @@ namespace AutomationTraining_M7.Test_Cases
                     //Step# 7 .- Apply the Filters
                     LinkedIn_SearchPage.fnClickApplyBtn();
                     //objRM.fnAddStepLogWithSnapshot(objTest, driver, "Filters Applied", $"{arrLines[i]}_Filters_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
-                    Thread.Sleep(5000);
-                    
-                    IList<IWebElement> allSearchResults = LinkedIn_SearchPage.fnAllResultPage();
 
-                    int memberCount = 1;
-
-                    //Step# 8 .- Get the People information
-                    for (int b = 0; b < allSearchResults.Count; b++)
-                    {
-                        wait.Until(ExpectedConditions.ElementIsVisible(By.XPath($"(//span[@class='actor-name' or @class='name actor-name'])[{b + 1}]")));
-                        wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath($"(//span[@class='actor-name' or @class='name actor-name'])[{b + 1}]")));
-                        string listXpath = $"(//span[@class='actor-name' or @class='name actor-name'])[{b + 1}]";
-                        string STR_TOTAL_RESULTS_WO = listXpath;
-                        wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(STR_TOTAL_RESULTS_WO)));
-                        IWebElement objSearchResult = driver.FindElement(By.XPath(listXpath));
-
-                        objSearchResult.Click();
-
-
-                        IList<IWebElement> PopUpBtn = LinkedIn_SearchPage.fnPopUpbtn();
-                        IList<IWebElement> CurrentJob = LinkedIn_SearchPage.CurrentJob();
-
-                        if (PopUpBtn.Count() > 0)
-                        {
-                            LinkedIn_SearchPage.fnClickPopUpBtn();
-                            Console.WriteLine(memberCount);
-                        }
-                        else
+                    int c = 0;
+                    while(c<100)
                         {
 
-                            wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[text()='Información de contacto']")));
-                            
+                        Thread.Sleep(5000);
+                        //wait.Until < ExpectedConditions.InvisibilityOfElementLocated(LinkedIn_SearchPage.fnClickApplyBtn())>;
+                        LinkedIn_SearchPage.fnScrollDownResults();
+                        //Thread.Sleep(1000);
+                        //
 
-                            if (CurrentJob.Count() > 0)
+                        IList<IWebElement> allSearchResults = LinkedIn_SearchPage.fnAllResultPage();
+                        
+                        int memberCount = 1;
+
+                        //Step# 8 .- Get the People information
+                        for (int b = 0; b < allSearchResults.Count; b++)
+                        {
+                            wait.Until(ExpectedConditions.ElementIsVisible(By.XPath($"(//span[@class='actor-name' or @class='name actor-name'])[{b + 1}]")));
+                            wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath($"(//span[@class='actor-name' or @class='name actor-name'])[{b + 1}]")));
+                            string listXpath = $"(//span[@class='actor-name' or @class='name actor-name'])[{b + 1}]";
+                            string STR_TOTAL_RESULTS_WO = listXpath;
+                            wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(STR_TOTAL_RESULTS_WO)));
+                            IWebElement objSearchResult = driver.FindElement(By.XPath(listXpath));
+                           
+                            objSearchResult.Click();
+
+
+                            IList<IWebElement> PopUpBtn = LinkedIn_SearchPage.fnPopUpbtn();
+                            IList<IWebElement> CurrentJob = LinkedIn_SearchPage.CurrentJob();
+
+                            if (PopUpBtn.Count() > 0)
                             {
+                                LinkedIn_SearchPage.fnClickPopUpBtn();
                                 Console.WriteLine(memberCount);
-                                driver.Navigate().Back();
                             }
                             else
                             {
-                                IList<IWebElement> ConnectBtn = LinkedIn_SearchPage.fnConnectBtn();
-                                if (ConnectBtn.Count() > 0)
+
+                                wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[text()='Información de contacto']")));
+
+
+                                if (CurrentJob.Count() > 0)
                                 {
-                                    LinkedIn_SearchPage.fnScrollDownToSkills();
-                                    file.Member.Add(LinkedIn_SearchPage.fnMemberInfo());
-                                    //if (arrLines[i].Contains("#")) { arrLines[i] = "CSharp"; }
-                                    //objRM.fnAddStepLogWithSnapshot(objTest, driver, "Data from Contact stored", $"{arrLines[i]}_Data_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
                                     Console.WriteLine(memberCount);
                                     driver.Navigate().Back();
                                 }
-                                
                                 else
                                 {
-                                    LinkedIn_SearchPage.fnClickSendMessage();
-                                    wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@class='msg-form__contenteditable t-14 t-black--light t-normal flex-grow-1 notranslate']//p")));
-                                    LinkedIn_SearchPage.fnSendMessage("test");
-                                    LinkedIn_SearchPage.fnClickMessageSend();
-                                    Console.WriteLine(memberCount);
-                                    driver.Navigate().Back();
-                                    
-                                }
-                               /* foreach (var technologies in rows)
-                                {
-                                    var splittedFilter = technologies.Technology.Split(';').ToList();
-
-                                    foreach (var filter in splittedFilter)
+                                    IList<IWebElement> ConnectBtn = LinkedIn_SearchPage.fnConnectBtn();
+                                    if (ConnectBtn.Count() > 0)
                                     {
-                                        LinkedIn_SearchPage.fnGetToolsAndTech(filter);
+                                        LinkedIn_SearchPage.fnScrollDownToSkills();
+                                        file.Member.Add(LinkedIn_SearchPage.fnMemberInfo());
+                                        //if (arrLines[i].Contains("#")) { arrLines[i] = "CSharp"; }
+                                        //objRM.fnAddStepLogWithSnapshot(objTest, driver, "Data from Contact stored", $"{arrLines[i]}_Data_{DateTime.Now.ToString("HHmmss")}.png", "Pass");
+                                        Console.WriteLine(memberCount);
+                                        driver.Navigate().Back();
                                     }
-                                    
-                                }*/
+
+                                    else
+                                    {
+                                        LinkedIn_SearchPage.fnClickSendMessage();
+                                        wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@class='msg-form__contenteditable t-14 t-black--light t-normal flex-grow-1 notranslate']//p")));
+                                        LinkedIn_SearchPage.fnSendMessage("test");
+                                        LinkedIn_SearchPage.fnClickMessageSend();
+                                        Console.WriteLine(memberCount);
+                                        driver.Navigate().Back();
+
+                                    }
+                                    /* foreach (var technologies in rows)
+                                     {
+                                         var splittedFilter = technologies.Technology.Split(';').ToList();
+
+                                         foreach (var filter in splittedFilter)
+                                         {
+                                             LinkedIn_SearchPage.fnGetToolsAndTech(filter);
+                                         }
+
+                                     }*/
+
+                                }
 
                             }
-                            
-                        }
-                        memberCount = memberCount + 1;
+                            memberCount = memberCount + 1;
 
-                        LinkedIn_SearchPage.fnScrollDownResults();
-                        if (memberCount > 10)
-                        {
-                            LinkedIn_SearchPage.fnClickNextBtn();
-                            memberCount = 1;
+
+                            if (memberCount > 10 && c!=99)
+                            {
+                                LinkedIn_SearchPage.fnClickNextBtn();
+                                memberCount = 1;
+                            }
                         }
+                        c++;
                     }
-                    
                     file.fnCreateFile(file.Member);
 
                     LinkedIn_SearchPage.fnClearFilters();
@@ -277,6 +287,7 @@ namespace AutomationTraining_M7.Test_Cases
             catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine("Error: " + ex.StackTrace);
             }
 
         }
